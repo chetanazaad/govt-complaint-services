@@ -23,7 +23,9 @@ def get_llm():
     try:
         tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
         model = AutoModelForCausalLM.from_pretrained(
-            MODEL_NAME
+            MODEL_NAME,
+            torch_dtype=torch.float32,
+            low_cpu_mem_usage=True
         )
         
         _llm_pipeline = pipeline(
@@ -75,16 +77,23 @@ async def extract_complaint_semantics(text: str, retry_count: int = 0) -> dict:
     if not llm:
         return fallback_result
 
+    MAX_INPUT_CHARS = 500
+    text = text[:MAX_INPUT_CHARS]
+
     # Simple pre-filter for performance boost
     text_lower = text.lower()
     
     if any(kw in text_lower for kw in ["bijli", "power"]):
+        logger.info({"fast_path": True, "category": "Electricity"})
         return {"category": "Electricity", "problem": "Power Issue", "district": None, "urgency": "medium", "language": "unknown", "confidence": 0.8}
     if any(kw in text_lower for kw in ["pani", "water"]):
+        logger.info({"fast_path": True, "category": "Water"})
         return {"category": "Water", "problem": "Water Supply Issue", "district": None, "urgency": "medium", "language": "unknown", "confidence": 0.8}
     if any(kw in text_lower for kw in ["police", "fir", "chori"]):
+        logger.info({"fast_path": True, "category": "Police"})
         return {"category": "Police", "problem": "Police Complaint", "district": None, "urgency": "high", "language": "unknown", "confidence": 0.8}
     if any(kw in text_lower for kw in ["road", "sadak", "transport"]):
+        logger.info({"fast_path": True, "category": "Transport"})
         return {"category": "Transport", "problem": "Transport Issue", "district": None, "urgency": "medium", "language": "unknown", "confidence": 0.8}
 
     prompt = f"""{SYSTEM_PROMPT}
@@ -100,7 +109,12 @@ Output:
             with torch.no_grad():
                 return llm(prompt, max_new_tokens=150, return_full_text=False)
                 
-        loop = asyncio.get_event_loop()
+        try:
+            loop = asyncio.get_running_loop()
+        except RuntimeError:
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            
         outputs = await asyncio.wait_for(
             loop.run_in_executor(None, _run_inference),
             timeout=3.0
@@ -135,6 +149,12 @@ Output:
             
         confidence = max(0.0, min(1.0, confidence))
             
+        logger.info({
+            "llm_used": True,
+            "confidence": confidence,
+            "category": category
+        })
+            
         return {
             "category": category,
             "problem": result.get("problem", "Unknown Issue"),
@@ -147,7 +167,8 @@ Output:
     except json.JSONDecodeError as e:
         logger.error(f"Failed to parse LLM JSON (retry={retry_count}): {e}")
         if retry_count < 1:
-            return await extract_complaint_semantics(text, retry_count=retry_count + 1)
+            new_prompt = text + "\nEnsure valid JSON only."
+            return await extract_complaint_semantics(new_prompt, retry_count=retry_count + 1)
         return fallback_result
     except Exception as e:
         logger.error(f"LLM extraction service error: {e}")
@@ -165,10 +186,9 @@ def warmup_model():
     """Ensures model loads at startup (important for Render cold start)."""
     get_llm()
     try:
-        loop = asyncio.get_event_loop()
-        if loop.is_running():
-            loop.create_task(extract_complaint_semantics("test input"))
-        else:
-            loop.run_until_complete(extract_complaint_semantics("test input"))
+        loop = asyncio.get_running_loop()
+        loop.create_task(extract_complaint_semantics("test input"))
     except RuntimeError:
-        asyncio.run(extract_complaint_semantics("test input"))
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(extract_complaint_semantics("test input"))
