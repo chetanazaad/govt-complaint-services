@@ -3,6 +3,7 @@ import json
 import logging
 import asyncio
 import torch
+import re
 from typing import Optional
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 
@@ -144,8 +145,11 @@ Output:
         if content.startswith("json"):
             content = content[4:].strip()
 
-        if not content.startswith("{"):
-            raise json.JSONDecodeError("Invalid JSON start", content, 0)
+        match = re.search(r"\{.*\}", content, re.DOTALL)
+        if match:
+            content = match.group()
+        else:
+            raise json.JSONDecodeError("Invalid JSON structure", content, 0)
 
         result = json.loads(content)
 
