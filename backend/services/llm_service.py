@@ -22,9 +22,7 @@ def get_llm():
     try:
         tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
         model = AutoModelForCausalLM.from_pretrained(
-            MODEL_NAME,
-            device_map="cpu",
-            low_cpu_mem_usage=True
+            MODEL_NAME
         )
         
         _llm_pipeline = pipeline(
@@ -32,9 +30,8 @@ def get_llm():
             model=model,
             tokenizer=tokenizer,
             max_new_tokens=150,
-            temperature=0.1,
-            do_sample=True,
-            top_p=0.9
+            temperature=0.0,
+            do_sample=False
         )
         logger.info("Local LLM loaded successfully.")
     except Exception as e:
@@ -76,14 +73,35 @@ async def extract_complaint_semantics(text: str, retry_count: int = 0) -> dict:
     if not llm:
         return fallback_result
 
-    # Format using chat template explicitly
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": text}
-    ]
+    # Simple pre-filter for performance boost
+    text_lower = text.lower()
+    if any(kw in text_lower for kw in ["bijli", "power"]):
+        fallback_result.update({"category": "Electricity", "problem": "Power Issue", "confidence": 0.8})
+        return fallback_result
+    if any(kw in text_lower for kw in ["pani", "water"]):
+        fallback_result.update({"category": "Water", "problem": "Water Supply Issue", "confidence": 0.8})
+        return fallback_result
+    if any(kw in text_lower for kw in ["police", "fir", "chori"]):
+        fallback_result.update({"category": "Police", "problem": "Police Complaint", "confidence": 0.8})
+        return fallback_result
+    if any(kw in text_lower for kw in ["road", "sadak", "transport"]):
+        fallback_result.update({"category": "Transport", "problem": "Transport Issue", "confidence": 0.8})
+        return fallback_result
+
+    prompt = f"""{SYSTEM_PROMPT}
+
+User Complaint:
+{text}
+
+Output:
+"""
     
     try:
-        outputs = llm(messages, max_new_tokens=150, return_full_text=False)
+        loop = asyncio.get_event_loop()
+        outputs = await loop.run_in_executor(
+            None, 
+            lambda: llm(prompt, max_new_tokens=150, return_full_text=False)
+        )
         content = outputs[0]["generated_text"].strip()
 
         # Clean potential markdown wrapping
@@ -97,16 +115,22 @@ async def extract_complaint_semantics(text: str, retry_count: int = 0) -> dict:
 
         result = json.loads(content)
 
-        # Validate required fields and clamp confidence
-        result["confidence"] = max(0.0, min(1.0, float(result.get("confidence", 0.0))))
-        
+        # Strict validation
+        category = result.get("category", "Other")
+        if category not in {"Electricity", "Police", "Water", "Transport", "Land", "Other"}:
+            category = "Other"
+            
+        urgency = result.get("urgency", "low")
+        if urgency not in {"low", "medium", "high"}:
+            urgency = "low"
+            
         return {
-            "category": result.get("category", "Other"),
+            "category": category,
             "problem": result.get("problem", "Unknown Issue"),
             "district": result.get("district", None),
-            "urgency": result.get("urgency", "low"),
+            "urgency": urgency,
             "language": result.get("language", "unknown"),
-            "confidence": result["confidence"],
+            "confidence": max(0.0, min(1.0, float(result.get("confidence", 0.0)))),
         }
 
     except json.JSONDecodeError as e:
@@ -125,3 +149,11 @@ async def classify_intent(query: str) -> Optional[dict]:
     if res["confidence"] == 0.0:
         return None
     return res
+
+def warmup_model():
+    """Ensures model loads at startup (important for Render cold start)."""
+    get_llm()
+    try:
+        asyncio.run(extract_complaint_semantics("test input"))
+    except RuntimeError:
+        pass
