@@ -22,6 +22,9 @@ def get_llm():
     logger.info(f"Loading local LLM {MODEL_NAME} into memory...")
     try:
         tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+        if tokenizer.pad_token is None:
+            tokenizer.pad_token = tokenizer.eos_token
+            
         model = AutoModelForCausalLM.from_pretrained(
             MODEL_NAME,
             torch_dtype=torch.float32,
@@ -96,7 +99,18 @@ async def extract_complaint_semantics(text: str, retry_count: int = 0) -> dict:
         logger.info({"fast_path": True, "category": "Transport"})
         return {"category": "Transport", "problem": "Transport Issue", "district": None, "urgency": "medium", "language": "unknown", "confidence": 0.8}
 
-    prompt = f"""{SYSTEM_PROMPT}
+    if retry_count > 0:
+        prompt = f"""{SYSTEM_PROMPT}
+
+IMPORTANT: Ensure output is strictly valid JSON.
+
+User Complaint:
+{text}
+
+Output:
+"""
+    else:
+        prompt = f"""{SYSTEM_PROMPT}
 
 User Complaint:
 {text}
@@ -129,6 +143,9 @@ Output:
             
         if content.startswith("json"):
             content = content[4:].strip()
+
+        if not content.startswith("{"):
+            raise json.JSONDecodeError("Invalid JSON start", content, 0)
 
         result = json.loads(content)
 
@@ -167,8 +184,7 @@ Output:
     except json.JSONDecodeError as e:
         logger.error(f"Failed to parse LLM JSON (retry={retry_count}): {e}")
         if retry_count < 1:
-            new_prompt = text + "\nEnsure valid JSON only."
-            return await extract_complaint_semantics(new_prompt, retry_count=retry_count + 1)
+            return await extract_complaint_semantics(text, retry_count=retry_count + 1)
         return fallback_result
     except Exception as e:
         logger.error(f"LLM extraction service error: {e}")
