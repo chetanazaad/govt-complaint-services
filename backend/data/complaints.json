@@ -1,0 +1,479 @@
+[
+  {
+    "category": "Electricity",
+    "problem": "Power Outage",
+    "district": "General",
+    "keywords": [
+      "power cut",
+      "no electricity",
+      "blackout",
+      "power outage",
+      "light gone",
+      "no power",
+      "no light",
+      "electricity gone",
+      "load shedding"
+    ],
+    "primary_action": {
+      "department": "State Electricity Distribution Company (DISCOM)",
+      "complaint_link": "https://www.upenergy.in/complaint",
+      "helpline": "1912",
+      "description": "Register a complaint for power outage in your area with the local electricity distribution company."
+    },
+    "escalation": {
+      "authority": "Electricity Ombudsman / State Electricity Regulatory Commission (SERC)",
+      "contact": "Visit your state's SERC website for escalation procedures.",
+      "timeline": "If unresolved within 30 days, escalate to the Electricity Ombudsman."
+    },
+    "rti": {
+      "department": "State Electricity Board / DISCOM",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Details of load shedding schedule, duration, and reasons for unscheduled outages in [your area] for the last 3 months."
+    }
+  },
+  {
+    "category": "Electricity",
+    "problem": "Power Outage",
+    "district": "Lucknow",
+    "keywords": [
+      "power cut",
+      "no electricity",
+      "blackout",
+      "power outage",
+      "light gone",
+      "no power",
+      "no light",
+      "electricity gone",
+      "load shedding"
+    ],
+    "primary_action": {
+      "department": "Lucknow Electricity Supply Administration (LESA)",
+      "complaint_link": "https://www.upenergy.in/lesa-complaint",
+      "helpline": "0522-2287747 / 1912",
+      "description": "Register a complaint with LESA for power outage in Lucknow. You can also visit the nearest LESA office in your zone."
+    },
+    "escalation": {
+      "authority": "Chief Engineer, LESA / UP Electricity Regulatory Commission (UPERC)",
+      "contact": "Contact Chief Engineer LESA at 0522-2287747. Escalate to UPERC at www.uperc.org if unresolved.",
+      "timeline": "LESA must respond within 48 hours. UPERC complaint within 30 days of non-resolution."
+    },
+    "rti": {
+      "department": "LESA / UPPCL",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in addressed to PIO, LESA Lucknow",
+      "sample_query": "Details of power outages reported in [your area/zone] of Lucknow, duration, and restoration time for the last 3 months."
+    }
+  },
+  {
+    "category": "Electricity",
+    "problem": "Power Outage",
+    "district": "Jaipur",
+    "keywords": [
+      "power cut",
+      "no electricity",
+      "blackout",
+      "power outage",
+      "light gone",
+      "no power",
+      "no light",
+      "electricity gone",
+      "load shedding"
+    ],
+    "primary_action": {
+      "department": "Jaipur Vidyut Vitran Nigam Ltd (JVVNL)",
+      "complaint_link": "https://energy.rajasthan.gov.in/jvvnl",
+      "helpline": "0141-2747474 / 1912",
+      "description": "Register a complaint with JVVNL for power outage in Jaipur. Use the Rajasthan Sampark portal for online complaints."
+    },
+    "escalation": {
+      "authority": "Superintending Engineer, JVVNL / Rajasthan Electricity Regulatory Commission (RERC)",
+      "contact": "Contact SE of your JVVNL zone. Escalate to RERC at www.rerc.rajasthan.gov.in if unresolved.",
+      "timeline": "JVVNL must acknowledge within 24 hours. RERC complaint after 15 days of non-resolution."
+    },
+    "rti": {
+      "department": "JVVNL / Rajasthan DISCOM",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in addressed to PIO, JVVNL Jaipur",
+      "sample_query": "Details of power outages in [your area] of Jaipur, including transformer failure reports and restoration timelines for the last 3 months."
+    }
+  },
+  {
+    "category": "Electricity",
+    "problem": "High Bill",
+    "district": "General",
+    "keywords": [
+      "high bill",
+      "excessive bill",
+      "wrong bill",
+      "inflated bill",
+      "meter reading wrong",
+      "overbilling",
+      "electricity bill",
+      "bill too high",
+      "wrong meter"
+    ],
+    "primary_action": {
+      "department": "State Electricity Distribution Company (DISCOM)",
+      "complaint_link": "https://www.upenergy.in/billing-complaint",
+      "helpline": "1912",
+      "description": "File a billing dispute with your DISCOM. Request a meter inspection and bill recalculation."
+    },
+    "escalation": {
+      "authority": "Consumer Grievance Redressal Forum (CGRF) / Electricity Ombudsman",
+      "contact": "Contact CGRF of your DISCOM. If unresolved, approach the Electricity Ombudsman.",
+      "timeline": "CGRF must resolve within 45 days. Ombudsman appeal within 30 days of CGRF order."
+    },
+    "rti": {
+      "department": "State Electricity Board / DISCOM",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Provide tariff slab details, meter reading logs, and billing calculation methodology for consumer ID [your ID] for the past 6 months."
+    }
+  },
+  {
+    "category": "Police",
+    "problem": "FIR Not Filed",
+    "district": "General",
+    "keywords": [
+      "fir not filed",
+      "police not registering",
+      "refusing fir",
+      "no fir",
+      "complaint not taken",
+      "police refuse",
+      "not filing case",
+      "police complaint ignored"
+    ],
+    "primary_action": {
+      "department": "Superintendent of Police (SP) / Commissioner of Police",
+      "complaint_link": "https://cctnsservices.gov.in/",
+      "helpline": "100 / 112",
+      "description": "If the local police station refuses to file an FIR, approach the Superintendent of Police (SP) or Commissioner with a written complaint."
+    },
+    "escalation": {
+      "authority": "Judicial Magistrate under Section 156(3) CrPC / State Human Rights Commission",
+      "contact": "File an application before the Judicial Magistrate under Section 156(3) CrPC to direct FIR registration.",
+      "timeline": "Magistrate can direct FIR registration immediately. SHRC complaint can be filed anytime."
+    },
+    "rti": {
+      "department": "Office of the SP / Commissioner of Police",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Number of FIR registration refusals in [police station name] in the last 12 months and action taken on each."
+    }
+  },
+  {
+    "category": "Police",
+    "problem": "FIR Not Filed",
+    "district": "Lucknow",
+    "keywords": [
+      "fir not filed",
+      "police not registering",
+      "refusing fir",
+      "no fir",
+      "complaint not taken",
+      "police refuse",
+      "not filing case",
+      "police complaint ignored"
+    ],
+    "primary_action": {
+      "department": "Commissioner of Police, Lucknow",
+      "complaint_link": "https://uppolice.gov.in/",
+      "helpline": "0522-2620269 / 112",
+      "description": "Approach the Commissioner of Police, Lucknow with a written complaint. You can also use the UP Police citizen portal or visit the nearest police station."
+    },
+    "escalation": {
+      "authority": "IG Range Lucknow / Judicial Magistrate under Section 156(3) CrPC",
+      "contact": "Contact IG Lucknow Range at 0522-2621509. File Section 156(3) application before the CJM Lucknow.",
+      "timeline": "Commissioner must respond within 7 days. Magistrate can direct FIR registration immediately."
+    },
+    "rti": {
+      "department": "Office of Commissioner of Police, Lucknow",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in to PIO, CP Office Lucknow",
+      "sample_query": "Number of FIR registration refusals at [police station name] in Lucknow in the last 12 months and action taken."
+    }
+  },
+  {
+    "category": "Land",
+    "problem": "Land Dispute",
+    "district": "General",
+    "keywords": [
+      "land dispute",
+      "property dispute",
+      "land grab",
+      "encroachment",
+      "illegal possession",
+      "land ownership",
+      "property encroachment",
+      "land conflict",
+      "boundary dispute"
+    ],
+    "primary_action": {
+      "department": "Revenue Department / District Collector / Tehsildar",
+      "complaint_link": "https://revenue.cg.nic.in/",
+      "helpline": "Contact your local District Collector's office",
+      "description": "File a complaint with the Tehsildar or District Collector regarding land disputes. Request demarcation and verification of land records."
+    },
+    "escalation": {
+      "authority": "Revenue Board / Civil Court / High Court",
+      "contact": "Appeal to the Revenue Board or file a civil suit for title declaration. For encroachment on government land, contact the District Magistrate.",
+      "timeline": "Revenue Board appeals within 60 days of Collector's order. Civil suits have no fixed timeline."
+    },
+    "rti": {
+      "department": "Revenue Department / Land Records Office",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Provide certified copies of land records (khasra, khatauni) for survey number [X] in village [Y], tehsil [Z], including mutation entries for the last 20 years."
+    }
+  },
+  {
+    "category": "Transport",
+    "problem": "Bad Road Condition",
+    "district": "General",
+    "keywords": [
+      "bad road",
+      "pothole",
+      "road damage",
+      "broken road",
+      "road not repaired",
+      "road condition",
+      "highway damage",
+      "road maintenance",
+      "road repair"
+    ],
+    "primary_action": {
+      "department": "Public Works Department (PWD) / Municipal Corporation / NHAI",
+      "complaint_link": "https://pgportal.gov.in/",
+      "helpline": "1800-111-565 (NHAI)",
+      "description": "Report road conditions to PWD for state roads, Municipal Corporation for city roads, or NHAI for national highways."
+    },
+    "escalation": {
+      "authority": "District Magistrate / Chief Engineer PWD / NHAI Regional Office",
+      "contact": "Escalate to the Chief Engineer (PWD) or NHAI Regional Officer. File a complaint on CPGRAMS (pgportal.gov.in).",
+      "timeline": "CPGRAMS complaints are tracked with a 60-day resolution target."
+    },
+    "rti": {
+      "department": "PWD / Municipal Corporation / NHAI",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Provide details of road maintenance budget allocated and spent for [road name/number] in [district] for the current financial year, including contractor details."
+    }
+  },
+  {
+    "category": "Transport",
+    "problem": "Bad Road Condition",
+    "district": "Jaipur",
+    "keywords": [
+      "bad road",
+      "pothole",
+      "road damage",
+      "broken road",
+      "road not repaired",
+      "road condition",
+      "highway damage",
+      "road maintenance",
+      "road repair"
+    ],
+    "primary_action": {
+      "department": "Jaipur Development Authority (JDA) / Jaipur Municipal Corporation (JMC)",
+      "complaint_link": "https://rajsampark.gov.in/",
+      "helpline": "0141-2227200 (JMC) / 181 (Rajasthan Sampark)",
+      "description": "Report road conditions in Jaipur to JMC for city roads or JDA for development area roads. Use Rajasthan Sampark portal for online complaint tracking."
+    },
+    "escalation": {
+      "authority": "Commissioner JMC / District Collector Jaipur / Chief Engineer PWD Rajasthan",
+      "contact": "Escalate to Commissioner JMC at 0141-2227200 or District Collector Jaipur. File on CPGRAMS for central highways.",
+      "timeline": "JMC must acknowledge within 3 days. Rajasthan Sampark tracks with a 30-day resolution target."
+    },
+    "rti": {
+      "department": "JMC / JDA / PWD Rajasthan",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in to PIO, JMC Jaipur",
+      "sample_query": "Road maintenance budget and expenditure for [road/area name] in Jaipur for the current financial year, including contractor and completion details."
+    }
+  },
+  {
+    "category": "Water",
+    "problem": "Water Supply Issue",
+    "district": "General",
+    "keywords": [
+      "no water",
+      "water supply",
+      "dirty water",
+      "water shortage",
+      "water contamination",
+      "tap water",
+      "water not coming",
+      "low pressure",
+      "water quality",
+      "water problem"
+    ],
+    "primary_action": {
+      "department": "Public Health Engineering Department (PHED) / Municipal Water Supply Board",
+      "complaint_link": "https://jalshakti-ddws.gov.in/",
+      "helpline": "Contact your local Jal Board / Municipal Corporation helpline",
+      "description": "Report water supply issues to the Public Health Engineering Department or your local Municipal Water Supply Board."
+    },
+    "escalation": {
+      "authority": "District Magistrate / State Water Resources Department / National Green Tribunal (for contamination)",
+      "contact": "Escalate to the District Magistrate or State Water Board. For contamination issues, file with the National Green Tribunal.",
+      "timeline": "Municipal complaints: 15-day resolution target. NGT complaints: hearing within 30 days."
+    },
+    "rti": {
+      "department": "PHED / Jal Board / Municipal Corporation",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Provide water quality test reports for [area/ward] for the last 6 months, including source details and treatment methods applied."
+    }
+  },
+  {
+    "category": "Water",
+    "problem": "Water Supply Issue",
+    "district": "Lucknow",
+    "keywords": [
+      "no water",
+      "water supply",
+      "dirty water",
+      "water shortage",
+      "water contamination",
+      "tap water",
+      "water not coming",
+      "low pressure",
+      "water quality",
+      "water problem"
+    ],
+    "primary_action": {
+      "department": "Lucknow Jal Sansthan / Lucknow Municipal Corporation (LMC)",
+      "complaint_link": "https://lmc.up.nic.in/",
+      "helpline": "0522-2639954 / Jal Sansthan: 0522-2205785",
+      "description": "Report water supply issues to Lucknow Jal Sansthan for piped water or LMC for tanker/emergency supply. Visit the nearest Jal Sansthan office for in-person complaint."
+    },
+    "escalation": {
+      "authority": "General Manager, Jal Sansthan Lucknow / District Magistrate Lucknow",
+      "contact": "Contact GM Jal Sansthan at 0522-2205785. Escalate to DM Lucknow for urgent issues.",
+      "timeline": "Jal Sansthan must respond within 24 hours for supply disruption. DM intervention for contamination."
+    },
+    "rti": {
+      "department": "Lucknow Jal Sansthan / LMC",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in to PIO, Jal Sansthan Lucknow",
+      "sample_query": "Water quality test reports for [ward/mohalla] in Lucknow for the last 6 months, chlorination records, and source details."
+    }
+  },
+  {
+    "category": "Transport",
+    "problem": "Overcharging by Auto/Taxi",
+    "district": "General",
+    "keywords": [
+      "overcharging",
+      "auto fare",
+      "taxi fare",
+      "meter tampering",
+      "fare too high",
+      "auto rickshaw",
+      "cab overcharging",
+      "no meter",
+      "refused meter"
+    ],
+    "primary_action": {
+      "department": "Regional Transport Office (RTO) / Transport Department",
+      "complaint_link": "https://parivahan.gov.in/",
+      "helpline": "Contact your local RTO helpline",
+      "description": "File a complaint with the Regional Transport Office against overcharging. Note the vehicle registration number and details of the incident."
+    },
+    "escalation": {
+      "authority": "Transport Commissioner / Consumer Forum",
+      "contact": "Escalate to the Transport Commissioner. For financial loss, file a complaint with the District Consumer Forum.",
+      "timeline": "RTO action within 15 days. Consumer Forum: hearing within 21 days of filing."
+    },
+    "rti": {
+      "department": "Regional Transport Office",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Provide the authorized fare chart for auto-rickshaws/taxis in [city], number of overcharging complaints received and resolved in the last 12 months."
+    }
+  },
+  {
+    "category": "Police",
+    "problem": "Cybercrime",
+    "district": "General",
+    "keywords": [
+      "cybercrime",
+      "online fraud",
+      "hacking",
+      "phishing",
+      "online scam",
+      "digital fraud",
+      "internet crime",
+      "social media threat",
+      "cyber bullying",
+      "identity theft"
+    ],
+    "primary_action": {
+      "department": "Cyber Crime Cell / National Cyber Crime Reporting Portal",
+      "complaint_link": "https://cybercrime.gov.in/",
+      "helpline": "1930 (National Cybercrime Helpline)",
+      "description": "Report cybercrime on the National Cyber Crime Reporting Portal immediately. Call 1930 for financial fraud to freeze transactions."
+    },
+    "escalation": {
+      "authority": "State Cyber Crime Cell / CERT-In / Judiciary",
+      "contact": "Escalate to the State Cyber Crime Cell SP. For large-scale fraud, report to CERT-In (cert-in.org.in).",
+      "timeline": "Financial fraud helpline (1930): Immediate action. Portal complaints: Tracked with case ID."
+    },
+    "rti": {
+      "department": "Cyber Crime Cell / Ministry of Home Affairs",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Number of cybercrime complaints received and resolved through cybercrime.gov.in in [state] for the last financial year, categorized by type of crime."
+    }
+  },
+  {
+    "category": "Water",
+    "problem": "Illegal Borewell",
+    "district": "General",
+    "keywords": [
+      "illegal borewell",
+      "unauthorized borewell",
+      "groundwater extraction",
+      "borewell without permission",
+      "illegal water extraction",
+      "borewell complaint"
+    ],
+    "primary_action": {
+      "department": "Central Ground Water Authority (CGWA) / State Ground Water Department",
+      "complaint_link": "https://cgwb.gov.in/",
+      "helpline": "Contact your State Ground Water Authority",
+      "description": "Report illegal borewells to the Central Ground Water Authority or the State Ground Water Department. Unauthorized extraction is punishable under the Environment Protection Act."
+    },
+    "escalation": {
+      "authority": "National Green Tribunal / District Magistrate",
+      "contact": "File a complaint before the National Green Tribunal. Also inform the District Magistrate for local enforcement action.",
+      "timeline": "NGT: hearing within 30 days. CGWA: action within 60 days."
+    },
+    "rti": {
+      "department": "CGWA / State Ground Water Department",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Number of authorized and unauthorized borewells in [district/block], action taken against illegal borewells in the last 2 years."
+    }
+  },
+  {
+    "category": "Land",
+    "problem": "Mutation Not Done",
+    "district": "General",
+    "keywords": [
+      "mutation pending",
+      "mutation not done",
+      "name transfer",
+      "khata transfer",
+      "property mutation",
+      "mutation rejected",
+      "land mutation",
+      "registry mutation"
+    ],
+    "primary_action": {
+      "department": "Revenue Department / Tehsildar / Sub-Registrar Office",
+      "complaint_link": "https://revenue.cg.nic.in/",
+      "helpline": "Contact your local Tehsildar's office",
+      "description": "Apply for mutation at the Tehsildar's office with sale deed, death certificate (if inheritance), and identity proof. Follow up on pending applications."
+    },
+    "escalation": {
+      "authority": "Sub-Divisional Magistrate (SDM) / Additional Collector / Revenue Board",
+      "contact": "Appeal to the SDM or Additional Collector if mutation is delayed or rejected. Further appeal to the Revenue Board.",
+      "timeline": "Mutation should be completed within 30-45 days. Appeal to SDM within 30 days of rejection."
+    },
+    "rti": {
+      "department": "Revenue Department / Tehsildar Office",
+      "how_to_file": "File RTI under Section 6 of RTI Act, 2005 via https://rtionline.gov.in",
+      "sample_query": "Status of mutation application number [X] filed on [date], total pending mutation cases in [tehsil], and average processing time."
+    }
+  }
+]

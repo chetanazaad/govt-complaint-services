@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where to Complain? — Government Complaint Navigator</title>
+    <meta name="description" content="Find the right government department, helpline, and complaint procedure for your grievance. AI-powered complaint navigation for Indian citizens.">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            200: '#bfdbfe',
+                            400: '#60a5fa',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        },
+                        surface: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            700: '#334155',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Gradient background */
+        .hero-gradient {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-gradient::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 30% 40%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 60%, rgba(99, 102, 241, 0.06) 0%, transparent 50%);
+            animation: float 20s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-2%, 2%); }
+        }
+
+        /* Loading dots */
+        .loading-dot {
+            animation: bounce 1.4s ease-in-out infinite both;
+        }
+        .loading-dot:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+
+        /* Card entrance animation */
+        .card-enter {
+            animation: cardSlideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes cardSlideUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Staggered children */
+        .stagger > *:nth-child(1) { animation-delay: 0.05s; }
+        .stagger > *:nth-child(2) { animation-delay: 0.15s; }
+        .stagger > *:nth-child(3) { animation-delay: 0.25s; }
+        .stagger > *:nth-child(4) { animation-delay: 0.35s; }
+        .stagger > *:nth-child(5) { animation-delay: 0.45s; }
+        .stagger > *:nth-child(6) { animation-delay: 0.55s; }
+
+        /* Feedback button pressed */
+        .feedback-btn {
+            transition: all 0.2s ease;
+        }
+        .feedback-btn:active {
+            transform: scale(0.93);
+        }
+        .feedback-btn.selected {
+            box-shadow: 0 0 0 2px currentColor;
+            transform: scale(1.05);
+        }
+
+        /* Pulse ring on helpline */
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Smooth scroll */
+        html { scroll-behavior: smooth; }
+
+        /* Focus ring */
+        .focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Timeline connector */
+        .timeline-line {
+            position: relative;
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 36px;
+            bottom: -8px;
+            width: 2px;
+            background: linear-gradient(to bottom, #3b82f6, #e2e8f0);
+        }
+        .timeline-line:last-child::before {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="bg-surface-50 text-surface-800 min-h-screen flex flex-col">
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- HERO SECTION -->
+    <!-- ═══════════════════════════════════════════ -->
+    <header class="hero-gradient text-white">
+        <div class="relative z-10 max-w-3xl mx-auto px-4 pt-16 pb-20 sm:pt-24 sm:pb-28 text-center">
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/10 rounded-full px-4 py-1.5 text-sm text-blue-200 mb-6">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                AI-Powered Complaint Navigator
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight leading-tight mb-4">
+                Where to <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">Complain?</span>
+            </h1>
+            <p class="text-lg text-slate-300 max-w-xl mx-auto mb-10">
+                Describe your problem in simple words. We'll tell you exactly where to go, whom to contact, and how to escalate.
+            </p>
+
+            <!-- Search Box -->
+            <form id="searchForm" class="max-w-2xl mx-auto" onsubmit="handleSearch(event)">
+                <!-- District Selector -->
+                <div class="mb-3 flex justify-center">
+                    <div class="relative inline-block">
+                        <i data-lucide="map-pin" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                        <select
+                            id="districtSelect"
+                            class="focus-ring appearance-none pl-9 pr-8 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg text-sm text-slate-200 transition-all duration-200 hover:border-white/30 focus:bg-white/15 focus:border-blue-400 cursor-pointer"
+                        >
+                            <option value="" class="bg-surface-900 text-white">All Districts (General)</option>
+                        </select>
+                        <i data-lucide="chevron-down" class="absolute right-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none"></i>
+                        <input
+                            id="queryInput"
+                            type="text"
+                            placeholder="e.g. No electricity in my area since morning..."
+                            class="focus-ring w-full pl-12 pr-4 py-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl text-white placeholder-slate-400 text-base transition-all duration-200 hover:border-white/30 focus:bg-white/15 focus:border-blue-400"
+                            maxlength="500"
+                            required
+                            autocomplete="off"
+                        >
+                    </div>
+                    <button
+                        id="searchBtn"
+                        type="submit"
+                        class="focus-ring flex items-center justify-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white font-semibold rounded-xl transition-all duration-200 active:scale-[0.97] shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
+                    >
+                        <i data-lucide="zap" class="w-5 h-5"></i>
+                        <span id="btnText">Find Solution</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Examples -->
+            <div class="mt-5 flex flex-wrap justify-center gap-2">
+                <span class="text-xs text-slate-500">Try:</span>
+                <button onclick="fillQuery('Police not filing my FIR')" class="text-xs text-slate-400 hover:text-blue-300 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-colors cursor-pointer border border-transparent hover:border-white/10">Police not filing my FIR</button>
+                <button onclick="fillQuery('High electricity bill')" class="text-xs text-slate-400 hover:text-blue-300 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-colors cursor-pointer border border-transparent hover:border-white/10">High electricity bill</button>
+                <button onclick="fillQuery('Road full of potholes')" class="text-xs text-slate-400 hover:text-blue-300 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-colors cursor-pointer border border-transparent hover:border-white/10">Road full of potholes</button>
+                <button onclick="fillQuery('Online fraud scam')" class="text-xs text-slate-400 hover:text-blue-300 bg-white/5 hover:bg-white/10 rounded-full px-3 py-1 transition-colors cursor-pointer border border-transparent hover:border-white/10">Online fraud scam</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- RESULTS SECTION -->
+    <!-- ═══════════════════════════════════════════ -->
+    <main class="flex-1 max-w-3xl w-full mx-auto px-4 py-8">
+
+        <!-- Loading State -->
+        <div id="loadingState" class="hidden text-center py-16">
+            <div class="flex justify-center gap-2 mb-4">
+                <div class="loading-dot w-3 h-3 bg-blue-500 rounded-full"></div>
+                <div class="loading-dot w-3 h-3 bg-blue-500 rounded-full"></div>
+                <div class="loading-dot w-3 h-3 bg-blue-500 rounded-full"></div>
+            </div>
+            <p class="text-slate-500 text-sm">Analyzing your complaint...</p>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="hidden">
+            <div class="card-enter bg-white border border-red-100 rounded-2xl p-6 text-center shadow-sm">
+                <div class="w-14 h-14 mx-auto mb-4 bg-red-50 rounded-full flex items-center justify-center">
+                    <i data-lucide="message-circle-warning" class="w-7 h-7 text-red-400"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-surface-800 mb-2">We couldn't understand your problem clearly</h3>
+                <p id="errorMessage" class="text-slate-500 text-sm mb-4">Please try describing your issue in different words.</p>
+                <p id="errorSuggestion" class="text-xs text-slate-400 italic hidden"></p>
+
+                <!-- Retry Keyword Suggestions -->
+                <div class="mt-4 pt-4 border-t border-red-50">
+                    <p class="text-xs text-slate-400 mb-2.5">Try using words like:</p>
+                    <div class="flex flex-wrap justify-center gap-2">
+                        <button onclick="fillQuery('electricity bill problem')" class="text-xs bg-surface-100 hover:bg-blue-50 hover:text-blue-600 text-slate-500 px-3 py-1.5 rounded-full transition-colors cursor-pointer border border-surface-200 hover:border-blue-200">electricity</button>
+                        <button onclick="fillQuery('police FIR not filed')" class="text-xs bg-surface-100 hover:bg-blue-50 hover:text-blue-600 text-slate-500 px-3 py-1.5 rounded-full transition-colors cursor-pointer border border-surface-200 hover:border-blue-200">police</button>
+                        <button onclick="fillQuery('land dispute problem')" class="text-xs bg-surface-100 hover:bg-blue-50 hover:text-blue-600 text-slate-500 px-3 py-1.5 rounded-full transition-colors cursor-pointer border border-surface-200 hover:border-blue-200">land</button>
+                        <button onclick="fillQuery('road not repaired')" class="text-xs bg-surface-100 hover:bg-blue-50 hover:text-blue-600 text-slate-500 px-3 py-1.5 rounded-full transition-colors cursor-pointer border border-surface-200 hover:border-blue-200">transport</button>
+                        <button onclick="fillQuery('no water supply')" class="text-xs bg-surface-100 hover:bg-blue-50 hover:text-blue-600 text-slate-500 px-3 py-1.5 rounded-full transition-colors cursor-pointer border border-surface-200 hover:border-blue-200">water</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsContainer" class="hidden stagger space-y-5">
+
+            <!-- Classification Badge -->
+            <div id="classificationBadge" class="card-enter opacity-0 bg-white border border-surface-200 rounded-2xl px-5 py-4 shadow-sm">
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 text-sm font-semibold px-3 py-1 rounded-full">
+                            <i data-lucide="tag" class="w-3.5 h-3.5"></i>
+                            <span id="resultCategory">—</span>
+                        </span>
+                        <span class="text-slate-300 text-sm">›</span>
+                        <span class="text-sm font-medium text-surface-700" id="resultProblem">—</span>
+                        <span id="resultDistrictBadge" class="hidden inline-flex items-center gap-1 bg-violet-50 text-violet-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-violet-100">
+                            <i data-lucide="map-pin" class="w-3 h-3"></i>
+                            <span id="resultDistrict"></span>
+                        </span>
+                    </div>
+                    <div class="ml-auto flex items-center gap-3">
+                        <!-- Confidence Level Label -->
+                        <span id="confidenceLabel" class="inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full">—</span>
+                        <div class="flex items-center gap-2">
+                            <div class="h-2 w-20 bg-surface-100 rounded-full overflow-hidden">
+                                <div id="confidenceBar" class="h-full rounded-full transition-all duration-700" style="width: 0%"></div>
+                            </div>
+                            <span id="confidenceText" class="text-xs text-slate-400 font-medium">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Matched Keywords -->
+                <div id="matchedKeywordsRow" class="hidden mt-3 pt-3 border-t border-surface-100">
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="text-xs text-slate-400 flex items-center gap-1">
+                            <i data-lucide="sparkles" class="w-3 h-3"></i>
+                            Matched based on:
+                        </span>
+                        <div id="matchedKeywordsList" class="flex flex-wrap gap-1.5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRIMARY ACTION CARD -->
+            <div id="primaryCard" class="card-enter opacity-0 bg-white border border-surface-200 rounded-2xl shadow-sm overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-indigo-500 px-5 py-3">
+                    <div class="flex items-center gap-2 text-white">
+                        <i data-lucide="building-2" class="w-5 h-5"></i>
+                        <h2 class="text-base font-semibold">Primary Action</h2>
+                    </div>
+                </div>
+                <div class="p-5 space-y-4">
+                    <!-- Department -->
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-medium mb-1">Department</p>
+                        <p id="deptName" class="text-base font-semibold text-surface-800">—</p>
+                    </div>
+                    <!-- Description -->
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-medium mb-1">What to Do</p>
+                        <p id="deptDescription" class="text-sm text-surface-700 leading-relaxed">—</p>
+                    </div>
+                    <!-- Action Items -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Helpline -->
+                        <a id="helplineLink" href="tel:" class="group flex items-center gap-3 bg-green-50 hover:bg-green-100 border border-green-100 rounded-xl px-4 py-3 transition-colors">
+                            <div class="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 pulse-ring">
+                                <i data-lucide="phone" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs text-green-600 font-medium">Helpline</p>
+                                <p id="helplineNumber" class="text-lg font-bold text-green-700">—</p>
+                            </div>
+                        </a>
+                        <!-- Complaint Link -->
+                        <a id="complaintLink" href="#" target="_blank" rel="noopener" class="group flex items-center gap-3 bg-blue-50 hover:bg-blue-100 border border-blue-100 rounded-xl px-4 py-3 transition-colors">
+                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="external-link" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div class="min-w-0">
+                                <p class="text-xs text-blue-600 font-medium">Complaint Portal</p>
+                                <p id="complaintLinkText" class="text-sm font-semibold text-blue-700 truncate">—</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ESCALATION CARD -->
+            <div id="escalationCard" class="card-enter opacity-0 bg-white border border-surface-200 rounded-2xl shadow-sm overflow-hidden">
+                <div class="bg-gradient-to-r from-amber-500 to-orange-500 px-5 py-3">
+                    <div class="flex items-center gap-2 text-white">
+                        <i data-lucide="trending-up" class="w-5 h-5"></i>
+                        <h2 class="text-base font-semibold">Escalation Path</h2>
+                    </div>
+                </div>
+                <div class="p-5 space-y-0">
+                    <!-- Level 1: Authority -->
+                    <div class="timeline-line flex gap-4 pb-5">
+                        <div class="flex-shrink-0 w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center text-amber-700 font-bold text-xs mt-1">1</div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-slate-400 font-medium mb-0.5">Escalate To</p>
+                            <p id="escAuthority" class="text-sm font-semibold text-surface-800">—</p>
+                        </div>
+                    </div>
+                    <!-- Level 2: How -->
+                    <div class="timeline-line flex gap-4 pb-5">
+                        <div class="flex-shrink-0 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-700 font-bold text-xs mt-1">2</div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-slate-400 font-medium mb-0.5">How to Contact</p>
+                            <p id="escContact" class="text-sm text-surface-700 leading-relaxed">—</p>
+                        </div>
+                    </div>
+                    <!-- Level 3: Timeline -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 bg-red-100 rounded-full flex items-center justify-center text-red-700 font-bold text-xs mt-1">3</div>
+                        <div>
+                            <p class="text-xs uppercase tracking-wider text-slate-400 font-medium mb-0.5">Timeline</p>
+                            <p id="escTimeline" class="text-sm text-surface-700 leading-relaxed">—</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RTI CARD -->
+            <div id="rtiCard" class="card-enter opacity-0 bg-white border border-surface-200 rounded-2xl shadow-sm overflow-hidden">
+                <div class="bg-gradient-to-r from-emerald-500 to-teal-500 px-5 py-3">
+                    <div class="flex items-center gap-2 text-white">
+                        <i data-lucide="file-text" class="w-5 h-5"></i>
+                        <h2 class="text-base font-semibold">RTI (Right to Information)</h2>
+                    </div>
+                </div>
+                <div class="p-5 space-y-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-medium mb-1">File RTI With</p>
+                        <p id="rtiDept" class="text-sm font-semibold text-surface-800">—</p>
+                    </div>
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-medium mb-1">How to File</p>
+                        <p id="rtiHow" class="text-sm text-surface-700 leading-relaxed">—</p>
+                    </div>
+                    <!-- RTI Template -->
+                    <div class="bg-emerald-50 border border-emerald-100 rounded-xl p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <i data-lucide="clipboard-copy" class="w-4 h-4 text-emerald-600"></i>
+                            <p class="text-xs uppercase tracking-wider text-emerald-700 font-semibold">Sample RTI Query</p>
+                        </div>
+                        <p id="rtiSample" class="text-sm text-emerald-800 leading-relaxed italic">—</p>
+                        <button onclick="copyRTI()" class="mt-3 inline-flex items-center gap-1.5 text-xs font-medium text-emerald-600 hover:text-emerald-800 bg-emerald-100 hover:bg-emerald-200 rounded-lg px-3 py-1.5 transition-colors">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                            <span id="copyBtnText">Copy to Clipboard</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Feedback Buttons -->
+            <div id="feedbackCard" class="card-enter opacity-0 bg-white border border-surface-200 rounded-2xl px-5 py-4 shadow-sm">
+                <div class="flex flex-col sm:flex-row items-center gap-3">
+                    <p class="text-sm text-slate-500">Was this helpful?</p>
+                    <div class="flex gap-2">
+                        <button id="feedbackYes" onclick="sendFeedback(true)" class="feedback-btn inline-flex items-center gap-2 px-4 py-2 bg-green-50 hover:bg-green-100 text-green-700 border border-green-200 rounded-xl text-sm font-medium transition-all">
+                            <span class="text-base">👍</span> This helped
+                        </button>
+                        <button id="feedbackNo" onclick="sendFeedback(false)" class="feedback-btn inline-flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 rounded-xl text-sm font-medium transition-all">
+                            <span class="text-base">👎</span> Not correct
+                        </button>
+                    </div>
+                </div>
+                <div id="feedbackThanks" class="hidden mt-3 text-center">
+                    <p class="text-sm text-emerald-600 font-medium flex items-center justify-center gap-1.5">
+                        <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+                        Thank you for your feedback!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Disclaimer -->
+            <div class="card-enter opacity-0 flex items-start gap-3 bg-amber-50 border border-amber-100 rounded-xl px-4 py-3">
+                <i data-lucide="info" class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5"></i>
+                <p id="disclaimerText" class="text-xs text-amber-700 leading-relaxed">
+                    This information is for guidance purposes only. This is not an official government website. Always verify with the official department.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- FOOTER -->
+    <!-- ═══════════════════════════════════════════ -->
+    <footer class="bg-surface-900 text-slate-400 mt-auto">
+        <div class="max-w-3xl mx-auto px-4 py-6 text-center">
+            <div class="flex items-center justify-center gap-2 mb-2">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+                <p class="text-xs font-medium text-amber-300">Important Disclaimer</p>
+            </div>
+            <p class="text-xs leading-relaxed max-w-lg mx-auto">
+                This is <strong class="text-slate-300">not</strong> an official government website. All information provided is for guidance purposes only. 
+                Contact details and procedures may change. Always verify with the relevant government department's official website before taking action.
+            </p>
+            <p class="text-xs text-slate-600 mt-4">&copy; 2026 Complaint Navigator. Built for public good.</p>
+        </div>
+    </footer>
+
+    <!-- ═══════════════════════════════════════════ -->
+    <!-- JAVASCRIPT -->
+    <!-- ═══════════════════════════════════════════ -->
+    <script>
+        // ── Configuration ──
+        const API_BASE_URL = ''; // Empty = same origin. Change for external backend.
+
+        // ── DOM Elements ──
+        const queryInput       = document.getElementById('queryInput');
+        const districtSelect   = document.getElementById('districtSelect');
+        const searchBtn        = document.getElementById('searchBtn');
+        const btnText          = document.getElementById('btnText');
+        const loadingState     = document.getElementById('loadingState');
+        const errorState       = document.getElementById('errorState');
+        const errorMessage     = document.getElementById('errorMessage');
+        const errorSuggestion  = document.getElementById('errorSuggestion');
+        const resultsContainer = document.getElementById('resultsContainer');
+
+        // ── Fill query from examples ──
+        function fillQuery(text) {
+            queryInput.value = text;
+            queryInput.focus();
+        }
+
+        // ── Main Search Handler ──
+        async function handleSearch(e) {
+            e.preventDefault();
+
+            const query = queryInput.value.trim();
+            if (!query || query.length < 3) {
+                queryInput.focus();
+                return;
+            }
+
+            // Reset UI
+            showState('loading');
+
+            try {
+                const district = districtSelect.value || null;
+                const payload = { query };
+                if (district) payload.district = district;
+
+                const response = await fetch(`${API_BASE_URL}/search`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    const err = await response.json().catch(() => ({}));
+                    const detail = err.detail || err;
+                    throw {
+                        message: detail.message || 'Something went wrong. Please try again.',
+                        suggestion: detail.suggestion || null,
+                    };
+                }
+
+                const data = await response.json();
+                renderResults(data);
+                showState('results');
+
+                // Smooth scroll to results
+                setTimeout(() => {
+                    document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 100);
+
+            } catch (err) {
+                errorMessage.textContent = err.message || 'Something went wrong. Please try again.';
+                if (err.suggestion) {
+                    errorSuggestion.textContent = err.suggestion;
+                    errorSuggestion.classList.remove('hidden');
+                } else {
+                    errorSuggestion.classList.add('hidden');
+                }
+                showState('error');
+            }
+        }
+
+        // ── Show/Hide States ──
+        function showState(state) {
+            loadingState.classList.add('hidden');
+            errorState.classList.add('hidden');
+            resultsContainer.classList.add('hidden');
+
+            if (state === 'loading') {
+                loadingState.classList.remove('hidden');
+                searchBtn.disabled = true;
+                btnText.textContent = 'Searching...';
+            } else if (state === 'error') {
+                errorState.classList.remove('hidden');
+                searchBtn.disabled = false;
+                btnText.textContent = 'Find Solution';
+            } else if (state === 'results') {
+                resultsContainer.classList.remove('hidden');
+                searchBtn.disabled = false;
+                btnText.textContent = 'Find Solution';
+            }
+        }
+
+        // ── Store last result for feedback ──
+        let lastSearchResult = null;
+
+        // ── Render Results ──
+        function renderResults(data) {
+            lastSearchResult = data;
+
+            // Classification
+            document.getElementById('resultCategory').textContent = data.category;
+            document.getElementById('resultProblem').textContent = data.problem;
+
+            // District badge
+            const distBadge = document.getElementById('resultDistrictBadge');
+            const distText = document.getElementById('resultDistrict');
+            if (data.district && data.district !== 'General') {
+                distText.textContent = data.district;
+                distBadge.classList.remove('hidden');
+            } else {
+                distBadge.classList.add('hidden');
+            }
+
+            // Confidence bar + percentage
+            const confidencePct = Math.round(data.confidence * 100);
+            document.getElementById('confidenceBar').style.width = confidencePct + '%';
+            document.getElementById('confidenceText').textContent = confidencePct + '%';
+
+            // Confidence level label (High / Medium / Low)
+            const confLabel = document.getElementById('confidenceLabel');
+            const confBar = document.getElementById('confidenceBar');
+            if (data.confidence >= 0.7) {
+                confLabel.textContent = '✓ High';
+                confLabel.className = 'inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-green-50 text-green-700 border border-green-200';
+                confBar.className = 'h-full rounded-full transition-all duration-700 bg-gradient-to-r from-green-400 to-emerald-500';
+            } else if (data.confidence >= 0.4) {
+                confLabel.textContent = '~ Medium';
+                confLabel.className = 'inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-amber-50 text-amber-700 border border-amber-200';
+                confBar.className = 'h-full rounded-full transition-all duration-700 bg-gradient-to-r from-amber-400 to-orange-500';
+            } else {
+                confLabel.textContent = '? Low';
+                confLabel.className = 'inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full bg-red-50 text-red-600 border border-red-200';
+                confBar.className = 'h-full rounded-full transition-all duration-700 bg-gradient-to-r from-red-400 to-rose-500';
+            }
+
+            // Matched Keywords
+            const kwRow = document.getElementById('matchedKeywordsRow');
+            const kwList = document.getElementById('matchedKeywordsList');
+            kwList.innerHTML = '';
+            if (data.matched_keywords && data.matched_keywords.length > 0) {
+                data.matched_keywords.forEach(kw => {
+                    const chip = document.createElement('span');
+                    chip.className = 'inline-block bg-indigo-50 text-indigo-600 text-xs font-medium px-2 py-0.5 rounded-md border border-indigo-100';
+                    chip.textContent = kw;
+                    kwList.appendChild(chip);
+                });
+                kwRow.classList.remove('hidden');
+            } else {
+                kwRow.classList.add('hidden');
+            }
+
+            // Primary Action
+            const pa = data.primary_action;
+            document.getElementById('deptName').textContent = pa.department;
+            document.getElementById('deptDescription').textContent = pa.description;
+            document.getElementById('helplineNumber').textContent = pa.helpline;
+            document.getElementById('helplineLink').href = 'tel:' + pa.helpline.replace(/[^0-9]/g, '');
+
+            document.getElementById('complaintLinkText').textContent = cleanUrl(pa.complaint_link);
+            document.getElementById('complaintLink').href = pa.complaint_link;
+
+            // Escalation
+            const esc = data.escalation;
+            document.getElementById('escAuthority').textContent = esc.authority;
+            document.getElementById('escContact').textContent = esc.contact;
+            document.getElementById('escTimeline').textContent = esc.timeline;
+
+            // RTI
+            const rti = data.rti;
+            document.getElementById('rtiDept').textContent = rti.department;
+            document.getElementById('rtiHow').textContent = rti.how_to_file;
+            document.getElementById('rtiSample').textContent = rti.sample_query;
+
+            // Disclaimer
+            if (data.disclaimer) {
+                document.getElementById('disclaimerText').textContent = data.disclaimer;
+            }
+
+            // Reset feedback buttons
+            document.getElementById('feedbackYes').disabled = false;
+            document.getElementById('feedbackNo').disabled = false;
+            document.getElementById('feedbackYes').classList.remove('ring-2', 'ring-green-400', 'opacity-50');
+            document.getElementById('feedbackNo').classList.remove('ring-2', 'ring-red-400', 'opacity-50');
+            document.getElementById('feedbackThanks').classList.add('hidden');
+        }
+
+        // ── Utility: Clean URL for display ──
+        function cleanUrl(url) {
+            try {
+                const u = new URL(url);
+                return u.hostname + u.pathname;
+            } catch {
+                return url;
+            }
+        }
+
+        // ── Copy RTI Template ──
+        function copyRTI() {
+            const text = document.getElementById('rtiSample').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copyBtnText');
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy to Clipboard'; }, 2000);
+            });
+        }
+
+        // ── Send Feedback ──
+        async function sendFeedback(helpful) {
+            const yesBtn = document.getElementById('feedbackYes');
+            const noBtn = document.getElementById('feedbackNo');
+            const thanks = document.getElementById('feedbackThanks');
+
+            // Visual feedback immediately
+            yesBtn.disabled = true;
+            noBtn.disabled = true;
+
+            if (helpful) {
+                yesBtn.classList.add('ring-2', 'ring-green-400');
+                noBtn.classList.add('opacity-50');
+            } else {
+                noBtn.classList.add('ring-2', 'ring-red-400');
+                yesBtn.classList.add('opacity-50');
+            }
+
+            thanks.classList.remove('hidden');
+
+            // Fire-and-forget to backend
+            try {
+                await fetch(`${API_BASE_URL}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: queryInput.value.trim(),
+                        category: lastSearchResult?.category || 'unknown',
+                        problem: lastSearchResult?.problem || 'unknown',
+                        helpful: helpful,
+                    }),
+                });
+            } catch (e) {
+                // Silently ignore — feedback is best-effort
+            }
+        }
+
+        // ── Initialize Lucide Icons ──
+        lucide.createIcons();
+
+        // ── Load districts on startup ──
+        async function loadDistricts() {
+            try {
+                const res = await fetch(`${API_BASE_URL}/districts`);
+                if (!res.ok) return;
+                const data = await res.json();
+                const select = document.getElementById('districtSelect');
+                (data.districts || []).forEach(d => {
+                    const opt = document.createElement('option');
+                    opt.value = d;
+                    opt.textContent = d;
+                    opt.className = 'bg-surface-900 text-white';
+                    select.appendChild(opt);
+                });
+            } catch (e) {
+                // Districts load is best-effort
+            }
+        }
+        loadDistricts();
+
+        // ── Keyboard shortcut: Ctrl+K to focus search ──
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                queryInput.focus();
+                queryInput.select();
+            }
+        });
+    </script>
+</body>
+</html>
