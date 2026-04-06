@@ -2,6 +2,7 @@ import os
 import json
 import logging
 import asyncio
+import torch
 from typing import Optional
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
 
@@ -31,7 +32,8 @@ def get_llm():
             tokenizer=tokenizer,
             max_new_tokens=150,
             temperature=0.0,
-            do_sample=False
+            do_sample=False,
+            truncation=True
         )
         logger.info("Local LLM loaded successfully.")
     except Exception as e:
@@ -75,18 +77,15 @@ async def extract_complaint_semantics(text: str, retry_count: int = 0) -> dict:
 
     # Simple pre-filter for performance boost
     text_lower = text.lower()
+    
     if any(kw in text_lower for kw in ["bijli", "power"]):
-        fallback_result.update({"category": "Electricity", "problem": "Power Issue", "confidence": 0.8})
-        return fallback_result
+        return {"category": "Electricity", "problem": "Power Issue", "district": None, "urgency": "medium", "language": "unknown", "confidence": 0.8}
     if any(kw in text_lower for kw in ["pani", "water"]):
-        fallback_result.update({"category": "Water", "problem": "Water Supply Issue", "confidence": 0.8})
-        return fallback_result
+        return {"category": "Water", "problem": "Water Supply Issue", "district": None, "urgency": "medium", "language": "unknown", "confidence": 0.8}
     if any(kw in text_lower for kw in ["police", "fir", "chori"]):
-        fallback_result.update({"category": "Police", "problem": "Police Complaint", "confidence": 0.8})
-        return fallback_result
+        return {"category": "Police", "problem": "Police Complaint", "district": None, "urgency": "high", "language": "unknown", "confidence": 0.8}
     if any(kw in text_lower for kw in ["road", "sadak", "transport"]):
-        fallback_result.update({"category": "Transport", "problem": "Transport Issue", "confidence": 0.8})
-        return fallback_result
+        return {"category": "Transport", "problem": "Transport Issue", "district": None, "urgency": "medium", "language": "unknown", "confidence": 0.8}
 
     prompt = f"""{SYSTEM_PROMPT}
 
@@ -97,10 +96,14 @@ Output:
 """
     
     try:
+        def _run_inference():
+            with torch.no_grad():
+                return llm(prompt, max_new_tokens=150, return_full_text=False)
+                
         loop = asyncio.get_event_loop()
-        outputs = await loop.run_in_executor(
-            None, 
-            lambda: llm(prompt, max_new_tokens=150, return_full_text=False)
+        outputs = await asyncio.wait_for(
+            loop.run_in_executor(None, _run_inference),
+            timeout=3.0
         )
         content = outputs[0]["generated_text"].strip()
 
@@ -124,13 +127,21 @@ Output:
         if urgency not in {"low", "medium", "high"}:
             urgency = "low"
             
+        confidence = float(result.get("confidence", 0.0))
+        if category == "Other":
+            confidence *= 0.7
+        if result.get("district") is None:
+            confidence *= 0.8
+            
+        confidence = max(0.0, min(1.0, confidence))
+            
         return {
             "category": category,
             "problem": result.get("problem", "Unknown Issue"),
             "district": result.get("district", None),
             "urgency": urgency,
             "language": result.get("language", "unknown"),
-            "confidence": max(0.0, min(1.0, float(result.get("confidence", 0.0)))),
+            "confidence": confidence,
         }
 
     except json.JSONDecodeError as e:
@@ -154,6 +165,10 @@ def warmup_model():
     """Ensures model loads at startup (important for Render cold start)."""
     get_llm()
     try:
-        asyncio.run(extract_complaint_semantics("test input"))
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            loop.create_task(extract_complaint_semantics("test input"))
+        else:
+            loop.run_until_complete(extract_complaint_semantics("test input"))
     except RuntimeError:
-        pass
+        asyncio.run(extract_complaint_semantics("test input"))
