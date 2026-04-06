@@ -6,6 +6,7 @@ import torch
 import re
 from typing import Optional
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
+from backend.services.cache import cache
 
 logger = logging.getLogger(__name__)
 
@@ -83,6 +84,11 @@ async def extract_complaint_semantics(text: str, retry_count: int = 0) -> dict:
 
     MAX_INPUT_CHARS = 500
     text = text[:MAX_INPUT_CHARS]
+
+    cached_res = cache.get(text)
+    if cached_res:
+        logger.info({"cache_hit": True, "category": cached_res.get("category", "Other")})
+        return cached_res
 
     # Simple pre-filter for performance boost
     text_lower = text.lower()
@@ -176,7 +182,7 @@ Output:
             "category": category
         })
             
-        return {
+        final_result = {
             "category": category,
             "problem": result.get("problem", "Unknown Issue"),
             "district": result.get("district", None),
@@ -184,6 +190,9 @@ Output:
             "language": result.get("language", "unknown"),
             "confidence": confidence,
         }
+        
+        cache.set(text, final_result)
+        return final_result
 
     except json.JSONDecodeError as e:
         logger.error(f"Failed to parse LLM JSON (retry={retry_count}): {e}")
