@@ -85,6 +85,15 @@ async def extract_complaint_semantics(text: str, retry_count: int = 0) -> dict:
     MAX_INPUT_CHARS = 500
     text = text[:MAX_INPUT_CHARS]
 
+    # Prompt Injection Defense: strip out adversarial override commands natively
+    injection_patterns = [
+        r"(?i)ignore previous", r"(?i)system prompt", 
+        r"(?i)act as", r"(?i)you are now", r"(?i)forget all",
+        r"(?i)override instructions", r"(?i)disregard"
+    ]
+    for pattern in injection_patterns:
+        text = re.sub(pattern, "", text)
+
     cached_res = cache.get(text)
     if cached_res:
         logger.info({"cache_hit": True, "category": cached_res.get("category", "Other")})

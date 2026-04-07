@@ -8,9 +8,10 @@ comprehensive local knowledge base.
 
 import logging
 import os
+import time
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
@@ -82,14 +83,43 @@ app = FastAPI(
     redoc_url="/redoc",
 )
 
-# CORS — allow all origins for public API access
+# CORS — allow specific origins for public API access
+ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://complaint-navigator.vercel.app,http://localhost:3000,http://localhost:10000").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
+
+# ──────────────────────────────────────────────
+# Rate Limiting & Resource Abuse
+# ──────────────────────────────────────────────
+
+RATE_LIMIT_DURATION = 60
+RATE_LIMIT_REQUESTS = 30
+ip_requests = {}
+
+@app.middleware("http")
+async def rate_limit(request: Request, call_next):
+    ip = request.client.host if request.client else "unknown"
+    now = time.time()
+    
+    if ip not in ip_requests:
+        ip_requests[ip] = []
+        
+    ip_requests[ip] = [t for t in ip_requests[ip] if now - t < RATE_LIMIT_DURATION]
+        
+    if len(ip_requests[ip]) >= RATE_LIMIT_REQUESTS:
+        return JSONResponse(status_code=429, content={
+            "error": "Rate limit exceeded",
+            "message": "Too many requests. Please try again later."
+        })
+        
+    ip_requests[ip].append(now)
+    return await call_next(request)
 
 
 # ──────────────────────────────────────────────
@@ -178,7 +208,7 @@ async def interpret(request: InterpretRequest):
             },
         )
 
-    logger.info("Processing query: %s", query[:100])
+    logger.info("Processing query length: %d", len(query))
 
     # ── Step 1: Check cache ──
     cached = cache.get(query)
@@ -298,7 +328,7 @@ async def search(request: InterpretRequest):
             },
         )
 
-    logger.info("[/search] Processing: %s (district=%s)", query[:100], district or "none")
+    logger.info("[/search] Processing length: %d (district=%s)", len(query), district or "none")
 
     # ── Step 1: Check cache (full result) ──
     cache_key = f"search:{query}:{district or 'general'}"
@@ -372,8 +402,8 @@ async def submit_feedback(feedback: dict):
     helpful = feedback.get("helpful", None)
 
     logger.info(
-        "[FEEDBACK] query=%s | category=%s | helpful=%s",
-        query[:100],
+        "[FEEDBACK] length=%d | category=%s | helpful=%s",
+        len(query),
         category,
         helpful,
     )
@@ -389,8 +419,8 @@ async def submit_feedback(feedback: dict):
 # ──────────────────────────────────────────────
 
 @app.exception_handler(Exception)
-async def global_exception_handler(request, exc):
-    logger.exception("Unhandled exception: %s", exc)
+async def global_exception_handler(request: Request, exc: Exception):
+    logger.error("Unhandled Exception on %s", request.url.path)
     return JSONResponse(
         status_code=500,
         content={
