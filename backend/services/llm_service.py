@@ -6,7 +6,7 @@ import torch
 import re
 from typing import Optional
 from transformers import pipeline, AutoModelForCausalLM, AutoTokenizer
-from backend.services.cache import cache
+from services.cache import cache
 
 logger = logging.getLogger(__name__)
 
